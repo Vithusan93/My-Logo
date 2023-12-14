@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Button } from '@radix-ui/themes';
-import { FaArrowAltCircleRight, FaArrowAltCircleDown } from 'react-icons/fa';
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { Button } from "@radix-ui/themes";
+import { FaArrowAltCircleRight, FaArrowAltCircleDown } from "react-icons/fa";
 
 interface CanvasManagerProps {
   width: number;
@@ -12,13 +13,14 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
   const [startX, setStartX] = useState(0);
   const [startY, setStartY] = useState(0);
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>("");
   const [currentRotation, setCurrentRotation] = useState(0);
+  const [angle, setAngle] = useState(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
       setContext(ctx);
       // Définir le point de départ au centre du canvas
       setStartX(width / 2);
@@ -30,7 +32,7 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
     if (context) {
       drawCenterArrow();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context, currentRotation]);
 
   const drawCenterArrow = () => {
@@ -47,57 +49,67 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
       context.lineTo(5, 10);
       context.moveTo(0, 0);
       context.lineTo(-5, 10);
-      context.strokeStyle = 'red';
+      context.strokeStyle = "red";
       context.stroke();
       context.restore();
     }
   };
 
-  const handleButtonClick = (direction: 'up' | 'right' | 'down' | 'left' | 'up-right' | 'up-left' | 'down-right' | 'down-left') => {
+  const handleButtonClick = (
+    direction:
+      | "up"
+      | "right"
+      | "down"
+      | "left"
+      | "up-right"
+      | "up-left"
+      | "down-right"
+      | "down-left"
+  ) => {
     if (context) {
       context.beginPath();
-      context.strokeStyle = 'black';
+      context.strokeStyle = "black";
 
       switch (direction) {
-        case 'up':
+        case "up":
           context.moveTo(startX, startY);
           context.lineTo(startX, startY - 20);
           setStartY(startY - 20);
           break;
-        case 'right':
+        case "right":
           context.moveTo(startX, startY);
           context.lineTo(startX + 20, startY);
           setStartX(startX + 20);
           break;
-        case 'down':
+        case "down":
           context.moveTo(startX, startY);
           context.lineTo(startX, startY + 20);
           setStartY(startY + 20);
           break;
-        case 'left':
+        case "left":
           context.moveTo(startX, startY);
           context.lineTo(startX - 20, startY);
           setStartX(startX - 20);
           break;
-        case 'up-right':
+        case "up-right":
           context.moveTo(startX, startY);
           context.lineTo(startX + 20, startY - 20);
           setStartX(startX + 20);
           setStartY(startY - 20);
           break;
-        case 'up-left':
+        case "up-left":
           context.moveTo(startX, startY);
           context.lineTo(startX - 20, startY - 20);
           setStartX(startX - 20);
           setStartY(startY - 20);
           break;
-        case 'down-right':
+        case "down-right":
           context.moveTo(startX, startY);
           context.lineTo(startX + 20, startY + 20);
           setStartX(startX + 20);
           setStartY(startY + 20);
           break;
-        case 'down-left':
+        case "down-left":
           context.moveTo(startX, startY);
           context.lineTo(startX - 20, startY + 20);
           setStartX(startX - 20);
@@ -116,43 +128,84 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
   };
 
   const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       executeCommand(inputValue);
     }
   };
 
+  const moveForward = (distance: number) => {
+    console.log(distance);
+    if (context) {
+      context.beginPath();
+      let x = startX;
+      let y = startY;
+      if (angle > 0 && angle < 180) {
+        y = y - distance * Math.cos(angle);
+        x = x + distance * Math.sin(angle);
+      } else {
+        x = startX;
+        y = startY - distance;
+      }
+      context.moveTo(startX, startY);
+      context.lineTo(x, y);
+      setStartY(y);
+      setStartX(x);
+      context.stroke();
+    }
+  };
+
+  // c cos a = b
+  // y = distance  cos angle
   const executeCommand = (command: string) => {
+    const validatedCommmand = command.toUpperCase();
+    const commandArgs = validatedCommmand.split(" ");
+
+    console.log(commandArgs);
+
+    switch (commandArgs[0]) {
+      case "AV":
+        const distance = parseInt(commandArgs[1]);
+        moveForward(distance);
+        break;
+      case "TD":
+        const rotationAngle = parseInt(commandArgs[1]);
+        setAngle(angle + rotationAngle);
+        break;
+    }
+    console.log(startX, startY, angle);
+    setInputValue("");
+    return;
     switch (command.toUpperCase()) {
-      case 'HAUT':
-        handleButtonClick('up');
+      case "AV 10":
+        moveForward(10);
         break;
-      case 'DROITE':
-        handleButtonClick('right');
+      case "DROITE":
+        handleButtonClick("right");
         break;
-      case 'BAS':
-        handleButtonClick('down');
+      case "BAS":
+        handleButtonClick("down");
         break;
-      case 'GAUCHE':
-        handleButtonClick('left');
+      case "GAUCHE":
+        handleButtonClick("left");
         break;
-      case 'D HAUT-DROITE':
-        handleButtonClick('up-right');
+      case "D HAUT-DROITE":
+        handleButtonClick("up-right");
         break;
-      case 'D HAUT-GAUCHE':
-        handleButtonClick('up-left');
+      case "D HAUT-GAUCHE":
+        handleButtonClick("up-left");
         break;
-      case 'D BAS-DROITE':
-        handleButtonClick('down-right');
+      case "D BAS-DROITE":
+        handleButtonClick("down-right");
         break;
-      case 'D BAS-GAUCHE':
-        handleButtonClick('down-left');
+      case "D BAS-GAUCHE":
+        handleButtonClick("down-left");
         break;
       default:
         // Gérer d'autres commandes si nécessaire
         break;
     }
 
-    setInputValue('');
+    setInputValue("");
   };
 
   return (
@@ -161,26 +214,34 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
         ref={canvasRef}
         width={width}
         height={height}
-        style={{ border: '1px solid black' }}
+        style={{ border: "1px solid black" }}
       />
       <div>
-        <Button onClick={() => handleButtonClick('up')}>Haut</Button>
-        <Button onClick={() => handleButtonClick('right')}>Droite</Button>
-        <Button onClick={() => handleButtonClick('down')}>Bas</Button>
-        <Button onClick={() => handleButtonClick('left')}>Gauche</Button>
-        <Button onClick={() => handleButtonClick('up-right')}>D Haut-Droite</Button>
-        <Button onClick={() => handleButtonClick('up-left')}>D Haut-Gauche</Button>
-        <Button onClick={() => handleButtonClick('down-right')}>D Bas-Droite</Button>
-        <Button onClick={() => handleButtonClick('down-left')}>D Bas-Gauche</Button>
+        <Button onClick={() => handleButtonClick("up")}>Haut</Button>
+        <Button onClick={() => handleButtonClick("right")}>Droite</Button>
+        <Button onClick={() => handleButtonClick("down")}>Bas</Button>
+        <Button onClick={() => handleButtonClick("left")}>Gauche</Button>
+        <Button onClick={() => handleButtonClick("up-right")}>
+          D Haut-Droite
+        </Button>
+        <Button onClick={() => handleButtonClick("up-left")}>
+          D Haut-Gauche
+        </Button>
+        <Button onClick={() => handleButtonClick("down-right")}>
+          D Bas-Droite
+        </Button>
+        <Button onClick={() => handleButtonClick("down-left")}>
+          D Bas-Gauche
+        </Button>
       </div>
-      <label style={{ color: 'red', display: 'block' }}>
+      <label style={{ color: "red", display: "block" }}>
         Input Label:
         <input
           type="text"
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
-          style={{ border: '1px solid black' }}
+          style={{ border: "1px solid black" }}
         />
       </label>
     </div>
