@@ -8,7 +8,7 @@ interface CanvasManagerProps {
   height: number;
 }
 
-interface Postion {
+interface Position {
   x: number;
   y: number;
   angle: number;
@@ -16,16 +16,19 @@ interface Postion {
 
 const ACTION_COMMANDS = ["AV", "RE", "TD", "TG"];
 
+const fancyCircle = "REPETE 20 [REPETE 180 [AV 1 TD 2] TD 18]";
+const simpleSquare = "REPETE 4 [AV 100 TD 90]";
+
 const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
   const [startX, setStartX] = useState(0);
   const [startY, setStartY] = useState(0);
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>(simpleSquare);
   const [currentRotation, setCurrentRotation] = useState(0);
   const [angle, setAngle] = useState(0);
   const [pathValue, setPathValue] = useState({ x: 0 });
-  const [currentPosition, setCurrentPosition] = useState<Postion>({
+  const [currentPosition, setCurrentPosition] = useState<Position>({
     x: width / 2,
     y: height / 2,
     angle: 0,
@@ -143,11 +146,15 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
 
   const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      executeCommand(inputValue);
+      let position = { ...currentPosition };
+      const validatedCommmand = inputValue.toUpperCase();
+      const commandArgs = validatedCommmand.split(" ");
+      position = executeCommand(commandArgs, position);
+      setCurrentPosition(position);
     }
   };
 
-  const rotate = (position: Postion, angle: number): Postion => {
+  const rotate = (position: Position, angle: number): Position => {
     if (context) {
       context.translate(position.x, position.y);
       context.rotate((angle * Math.PI) / 180);
@@ -156,7 +163,7 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
     return position;
   };
 
-  const moveForward = (position: Postion, distance: number): Postion => {
+  const moveForward = (position: Position, distance: number): Position => {
     if (context) {
       const newPosition = { ...position };
       context.beginPath();
@@ -172,8 +179,8 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
   const executeActionCommand = (
     command: string,
     value: number,
-    position: Postion
-  ): Postion => {
+    position: Position
+  ): Position => {
     switch (command) {
       case "AV":
         const distance = value;
@@ -183,34 +190,47 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
         position = rotate(position, value);
         // position.angle += rotationAngle;
         break;
+      case "TG":
+        position = rotate(position, -value);
+        // position.angle += rotationAngle;
+        break;
     }
     return position;
   };
 
   // c cos a = b
   // y = distance  cos angle
-  const executeCommand = (commandInput: string) => {
+  const executeCommand = (commands: string[], position: Position): Position => {
     //TODO Do validation and cleaning
-    const validatedCommmand = commandInput.toUpperCase();
-    const commandArgs = validatedCommmand.split(" ");
 
-    let position = { ...currentPosition };
-
-    for (let i = 0; i < commandArgs.length; i++) {
-      const command = commandArgs[i];
+    for (let i = 0; i < commands.length; i++) {
+      const command = commands[i];
       if (ACTION_COMMANDS.includes(command)) {
         i += 1;
-        const commandValue = parseInt(commandArgs[i]);
+        const commandValue = parseInt(commands[i]);
         console.log(command, commandValue);
         position = executeActionCommand(command, commandValue, position);
+      } else if (command === "REPETE") {
+        i += 1;
+        const loopCount = parseInt(commands[i]);
+
+        const loopCommands = [];
+        i += 1;
+        let loopClosed = false;
+
+        while (!loopClosed) {
+          loopCommands.push(commands[i]);
+        }
+        for (let k = 0; k < loopCount; k++) {
+          position = executeCommand(loopCommands, position);
+        }
       }
     }
 
     console.log(startX, startY, angle);
-    setInputValue("AV 80 TD 134");
+    setInputValue(simpleSquare);
 
-    setCurrentPosition(position);
-    return;
+    return position;
   };
 
   return (
@@ -247,6 +267,7 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
           style={{ border: "1px solid black" }}
+          className="w-full"
         />
       </label>
     </div>
