@@ -17,7 +17,7 @@ interface Position {
 const ACTION_COMMANDS = ["AV", "RE", "TD", "TG"];
 
 const fancyCircle = "REPETE 20 [REPETE 180 [AV 1 TD 2] TD 18]";
-const simpleSquare = "REPETE 4 [AV 100 TD 90]";
+const simpleSquare = fancyCircle; // "REPETE 4 [AV 100 TD 90]";
 
 const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -216,11 +216,34 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
 
         const loopCommands = [];
         i += 1;
-        let loopClosed = false;
+        console.log(commands[i]);
 
-        while (!loopClosed) {
-          loopCommands.push(commands[i]);
+        if (!commands[i].startsWith("[")) {
+          console.log("ERROR");
+          return position;
         }
+        const starter = commands[i].slice(1);
+        loopCommands.push(starter);
+
+        let openCount = 1;
+        let closeCount = 0;
+
+        while (openCount !== closeCount) {
+          i += 1;
+          if (commands[i].startsWith("[")) {
+            openCount++;
+          }
+          if (commands[i].endsWith("]")) {
+            closeCount++;
+          }
+          if (openCount === closeCount) {
+            const ender = commands[i].slice(0, -1);
+            loopCommands.push(ender);
+          } else {
+            loopCommands.push(commands[i]);
+          }
+        }
+
         for (let k = 0; k < loopCount; k++) {
           position = executeCommand(loopCommands, position);
         }
@@ -228,7 +251,6 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
     }
 
     console.log(startX, startY, angle);
-    setInputValue(simpleSquare);
 
     return position;
   };
