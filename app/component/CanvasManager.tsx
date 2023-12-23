@@ -8,6 +8,14 @@ interface CanvasManagerProps {
   height: number;
 }
 
+interface Postion {
+  x: number;
+  y: number;
+  angle: number;
+}
+
+const ACTION_COMMANDS = ["AV", "RE", "TD", "TG"];
+
 const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
@@ -16,6 +24,12 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
   const [inputValue, setInputValue] = useState<string>("");
   const [currentRotation, setCurrentRotation] = useState(0);
   const [angle, setAngle] = useState(0);
+  const [pathValue, setPathValue] = useState({ x: 0 });
+  const [currentPosition, setCurrentPosition] = useState<Postion>({
+    x: width / 2,
+    y: height / 2,
+    angle: 0,
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -133,79 +147,70 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
     }
   };
 
-  const moveForward = (distance: number) => {
-    console.log(distance);
+  const rotate = (position: Postion, angle: number): Postion => {
     if (context) {
-      context.beginPath();
-      let x = startX;
-      let y = startY;
-      if (angle > 0 && angle < 180) {
-        y = y - distance * Math.cos(angle);
-        x = x + distance * Math.sin(angle);
-      } else {
-        x = startX;
-        y = startY - distance;
-      }
-      context.moveTo(startX, startY);
-      context.lineTo(x, y);
-      setStartY(y);
-      setStartX(x);
-      context.stroke();
+      context.translate(position.x, position.y);
+      context.rotate((angle * Math.PI) / 180);
+      context.translate(-position.x, -position.y);
     }
+    return position;
+  };
+
+  const moveForward = (position: Postion, distance: number): Postion => {
+    if (context) {
+      const newPosition = { ...position };
+      context.beginPath();
+      context.moveTo(position.x, position.y);
+      newPosition.y = position.y - distance;
+      context.lineTo(newPosition.x, newPosition.y);
+      context.stroke();
+      return newPosition;
+    }
+    return position;
+  };
+
+  const executeActionCommand = (
+    command: string,
+    value: number,
+    position: Postion
+  ): Postion => {
+    switch (command) {
+      case "AV":
+        const distance = value;
+        position = moveForward(position, distance);
+        break;
+      case "TD":
+        position = rotate(position, value);
+        // position.angle += rotationAngle;
+        break;
+    }
+    return position;
   };
 
   // c cos a = b
   // y = distance  cos angle
-  const executeCommand = (command: string) => {
-    const validatedCommmand = command.toUpperCase();
+  const executeCommand = (commandInput: string) => {
+    //TODO Do validation and cleaning
+    const validatedCommmand = commandInput.toUpperCase();
     const commandArgs = validatedCommmand.split(" ");
 
-    console.log(commandArgs);
+    let position = { ...currentPosition };
 
-    switch (commandArgs[0]) {
-      case "AV":
-        const distance = parseInt(commandArgs[1]);
-        moveForward(distance);
-        break;
-      case "TD":
-        const rotationAngle = parseInt(commandArgs[1]);
-        setAngle(angle + rotationAngle);
-        break;
+    for (let i = 0; i < commandArgs.length; i++) {
+      const command = commandArgs[i];
+      if (ACTION_COMMANDS.includes(command)) {
+        i += 1;
+        const commandValue = parseInt(commandArgs[i]);
+        console.log(command, commandValue);
+        position = executeActionCommand(command, commandValue, position);
+      }
     }
+
     console.log(startX, startY, angle);
-    setInputValue("");
-    return;
-    switch (command.toUpperCase()) {
-      case "AV 10":
-        moveForward(10);
-        break;
-      case "DROITE":
-        handleButtonClick("right");
-        break;
-      case "BAS":
-        handleButtonClick("down");
-        break;
-      case "GAUCHE":
-        handleButtonClick("left");
-        break;
-      case "D HAUT-DROITE":
-        handleButtonClick("up-right");
-        break;
-      case "D HAUT-GAUCHE":
-        handleButtonClick("up-left");
-        break;
-      case "D BAS-DROITE":
-        handleButtonClick("down-right");
-        break;
-      case "D BAS-GAUCHE":
-        handleButtonClick("down-left");
-        break;
-      default:
-        // Gérer d'autres commandes si nécessaire
-        break;
-    }
+    setInputValue("AV 80 TD 134");
 
-    setInputValue("");
+    setCurrentPosition(position);
+    return;
   };
 
   return (
