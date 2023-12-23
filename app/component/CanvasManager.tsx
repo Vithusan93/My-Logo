@@ -183,8 +183,10 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
   ): Position => {
     switch (command) {
       case "AV":
-        const distance = value;
-        position = moveForward(position, distance);
+        position = moveForward(position, value);
+        break;
+      case "RE":
+        position = moveForward(position, -value);
         break;
       case "TD":
         position = rotate(position, value);
