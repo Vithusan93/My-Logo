@@ -6,6 +6,7 @@ import { FaArrowAltCircleRight, FaArrowAltCircleDown } from "react-icons/fa";
 interface CanvasManagerProps {
   width: number;
   height: number;
+  commandInput?: string;
 }
 
 interface Position {
@@ -19,7 +20,11 @@ const ACTION_COMMANDS = ["AV", "RE", "TD", "TG"];
 const fancyCircle = "REPETE 20 [REPETE 180 [AV 1 TD 2] TD 18]";
 const simpleSquare = fancyCircle; // "REPETE 4 [AV 100 TD 90]";
 
-const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
+const CanvasManager: React.FC<CanvasManagerProps> = ({
+  width,
+  height,
+  commandInput,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
   const [startX, setStartX] = useState(0);
@@ -42,8 +47,11 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
       // Définir le point de départ au centre du canvas
       setStartX(width / 2);
       setStartY(height / 2);
+      if (commandInput) {
+        injectCommand(commandInput);
+      }
     }
-  }, [width, height]);
+  }, [width, height, commandInput]);
 
   useEffect(() => {
     if (context) {
@@ -72,86 +80,26 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
     }
   };
 
-  const handleButtonClick = (
-    direction:
-      | "up"
-      | "right"
-      | "down"
-      | "left"
-      | "up-right"
-      | "up-left"
-      | "down-right"
-      | "down-left"
-  ) => {
-    if (context) {
-      context.beginPath();
-      context.strokeStyle = "black";
-
-      switch (direction) {
-        case "up":
-          context.moveTo(startX, startY);
-          context.lineTo(startX, startY - 20);
-          setStartY(startY - 20);
-          break;
-        case "right":
-          context.moveTo(startX, startY);
-          context.lineTo(startX + 20, startY);
-          setStartX(startX + 20);
-          break;
-        case "down":
-          context.moveTo(startX, startY);
-          context.lineTo(startX, startY + 20);
-          setStartY(startY + 20);
-          break;
-        case "left":
-          context.moveTo(startX, startY);
-          context.lineTo(startX - 20, startY);
-          setStartX(startX - 20);
-          break;
-        case "up-right":
-          context.moveTo(startX, startY);
-          context.lineTo(startX + 20, startY - 20);
-          setStartX(startX + 20);
-          setStartY(startY - 20);
-          break;
-        case "up-left":
-          context.moveTo(startX, startY);
-          context.lineTo(startX - 20, startY - 20);
-          setStartX(startX - 20);
-          setStartY(startY - 20);
-          break;
-        case "down-right":
-          context.moveTo(startX, startY);
-          context.lineTo(startX + 20, startY + 20);
-          setStartX(startX + 20);
-          setStartY(startY + 20);
-          break;
-        case "down-left":
-          context.moveTo(startX, startY);
-          context.lineTo(startX - 20, startY + 20);
-          setStartX(startX - 20);
-          setStartY(startY + 20);
-          break;
-        default:
-          break;
-      }
-
-      context.stroke();
-    }
-  };
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      let position = { ...currentPosition };
-      const validatedCommmand = inputValue.toUpperCase();
-      const commandArgs = validatedCommmand.split(" ");
-      position = executeCommand(commandArgs, position);
-      setCurrentPosition(position);
+      injectCommand(inputValue);
     }
+  };
+
+  const injectCommand = (injectedCommand: string) => {
+    let position = { ...currentPosition };
+
+    const validatedCommmand = injectedCommand
+      .toUpperCase()
+      .replace(/\s+/g, " ")
+      .replace("\n", " ");
+    const commandArgs = validatedCommmand.split(" ");
+    position = executeCommand(commandArgs, position);
+    setCurrentPosition(position);
   };
 
   const rotate = (position: Position, angle: number): Position => {

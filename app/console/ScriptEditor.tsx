@@ -3,7 +3,11 @@
 import { Button } from "@radix-ui/themes";
 import React, { useState } from "react";
 
-const ScriptEditor = () => {
+const ScriptEditor = ({
+  onExecute,
+}: {
+  onExecute: (inputCommand: string) => void;
+}) => {
   const [textAreaContent, setTextAreaContent] = useState("");
 
   const handleSaveToFile = () => {
@@ -49,7 +53,7 @@ const ScriptEditor = () => {
         onChange={(e) => setTextAreaContent(e.target.value)}
       />
       <div>
-        <Button>Execute</Button>
+        <Button onClick={() => onExecute(textAreaContent)}>Execute</Button>
       </div>
     </div>
   );
