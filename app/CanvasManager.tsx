@@ -265,24 +265,6 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({ width, height }) => {
         height={height}
         style={{ border: "1px solid black" }}
       />
-      <div>
-        <Button onClick={() => handleButtonClick("up")}>Haut</Button>
-        <Button onClick={() => handleButtonClick("right")}>Droite</Button>
-        <Button onClick={() => handleButtonClick("down")}>Bas</Button>
-        <Button onClick={() => handleButtonClick("left")}>Gauche</Button>
-        <Button onClick={() => handleButtonClick("up-right")}>
-          D Haut-Droite
-        </Button>
-        <Button onClick={() => handleButtonClick("up-left")}>
-          D Haut-Gauche
-        </Button>
-        <Button onClick={() => handleButtonClick("down-right")}>
-          D Bas-Droite
-        </Button>
-        <Button onClick={() => handleButtonClick("down-left")}>
-          D Bas-Gauche
-        </Button>
-      </div>
       <label style={{ color: "red", display: "block" }}>
         Input Label:
         <input
