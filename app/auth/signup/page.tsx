@@ -1,21 +1,11 @@
 "use client";
 
-import React from "react";
-import { Flex, Text, TextField, Button } from "@radix-ui/themes";
-import { useForm } from "react-hook-form";
-
-import { z } from "zod";
+import { userCreationSchema } from "@/app/api/signup/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-const userCreationSchema = z
-  .object({
-    email: z.string().email(),
-    password: z.string().min(8),
-    confirmPassword: z.string().min(8),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
+import { Button } from "@radix-ui/themes";
+import { redirect, useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 type creationType = z.infer<typeof userCreationSchema>;
 const SignUp = () => {
@@ -25,6 +15,7 @@ const SignUp = () => {
     formState: { errors },
   } = useForm<creationType>({ resolver: zodResolver(userCreationSchema) });
 
+  const router = useRouter();
   return (
     <div className="">
       <div className="">
@@ -43,10 +34,37 @@ const SignUp = () => {
                 </h1>
                 <form
                   className="space-y-4 md:space-y-6"
-                  onSubmit={handleSubmit((data) => {
-                    console.log(data);
+                  onSubmit={handleSubmit(async (data) => {
+                    const validation = userCreationSchema.safeParse(data);
+                    if (!validation.success) {
+                      return;
+                    }
+                    const response = await fetch("/api/signup", {
+                      method: "POST",
+                      body: JSON.stringify(data),
+                    });
+                    if (response.status === 201) {
+                      router.push("/api/auth/signin");
+                    }
                   })}
                 >
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Your name
+                    </label>
+                    <input
+                      type="name"
+                      {...register("name")}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="John Cena"
+                    />
+                    {errors.name && (
+                      <p className="text-red-500">{errors.name.message}</p>
+                    )}
+                  </div>
                   <div>
                     <label
                       htmlFor="email"

@@ -1,5 +1,7 @@
+import prisma from "@/prisma/client";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -17,11 +19,30 @@ export const authOptions = {
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
-        const user = { id: "1", name: "Behan", email: "behan@mylogo.com" };
 
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
+        if (!credentials) {
+          return null;
+        }
+
+        const unsafeUser = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (unsafeUser) {
+          const user = {
+            id: unsafeUser.id.toString(),
+            name: unsafeUser.name,
+            email: unsafeUser.email,
+          };
+          const passwordMatch = await bcrypt.compare(
+            credentials.password,
+            unsafeUser.password
+          );
+          if (passwordMatch) {
+            return user;
+          }
+
+          return null;
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
           return null;
