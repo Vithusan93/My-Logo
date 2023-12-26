@@ -28,8 +28,8 @@ model LogoClass {
 
   instructorId          Int
   instructor            User           @relation("instructors", fields: [instructorId], references: [id])
-  assistantInstructorId Int
-  assistantInstructor   User           @relation("assistantInstructors", fields: [assistantInstructorId], references: [id])
+  assistantInstructorId Int?
+  assistantInstructor   User?           @relation("assistantInstructors", fields: [assistantInstructorId], references: [id])
   ClassStudent          ClassStudent[]
 }
 

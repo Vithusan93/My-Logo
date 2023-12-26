@@ -6,11 +6,11 @@ import React from "react";
 const NavBar = () => {
   const { data: session, status } = useSession();
   return (
-    <div className="flex justify-between bg-neutral-900 p-3 text-gray-200 fixed w-full font-semibold">
+    <div className="flex justify-between bg-green-200 p-3 text-gray-800 fixed w-full font-semibold">
       <div>Menu search</div>
-      <div className="flex">
+      <div className="">
         {session ? (
-          <div>
+          <div className="flex items-center gap-2 justify-center">
             {session?.user?.email}{" "}
             <Button variant="outline" onClick={() => signOut()}>
               Sign Out

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import CanvasManager from "../CanvasManager";
 import ScriptEditor from "./ScriptEditor";
+import LogoClassPanel from "./LogoClassPanel";
 
 const Console = () => {
   const [activeCommand, setActiveCommand] = useState("");
@@ -19,7 +20,9 @@ const Console = () => {
             commandInput={activeCommand}
           />
         </div>
-        <div className="flex-1 bg-green-200">C</div>
+        <div className="flex-1 bg-green-200 pt-14 px-2">
+          <LogoClassPanel />
+        </div>
       </div>
     </div>
   );
