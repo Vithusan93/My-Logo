@@ -11,8 +11,34 @@ datasource db {
 }
 
 model User {
+  id                 Int            @id @default(autoincrement())
+  email              String         @unique
+  name               String
+  password           String
+  instructingClasses LogoClass[]    @relation("instructors")
+  assistingClasses   LogoClass[]    @relation("assistantInstructors")
+  ClassStudent       ClassStudent[]
+}
+
+model LogoClass {
   id       Int    @id @default(autoincrement())
-  email    String @unique
   name     String
+  link     String
   password String
+
+  instructorId          Int
+  instructor            User           @relation("instructors", fields: [instructorId], references: [id])
+  assistantInstructorId Int
+  assistantInstructor   User           @relation("assistantInstructors", fields: [assistantInstructorId], references: [id])
+  ClassStudent          ClassStudent[]
+}
+
+model ClassStudent {
+  logoClassId Int
+  logoClass   LogoClass @relation(fields: [logoClassId], references: [id])
+
+  studentId Int
+  student   User @relation(fields: [studentId], references: [id])
+
+  @@id([logoClassId, studentId])
 }
