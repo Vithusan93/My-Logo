@@ -18,7 +18,7 @@ interface Position {
 const ACTION_COMMANDS = ["AV", "RE", "TD", "TG"];
 
 const fancyCircle = "REPETE 20 [REPETE 180 [AV 1 TD 2] TD 18]";
-const simpleSquare = fancyCircle; // "REPETE 4 [AV 100 TD 90]";
+const simpleSquare = "REPETE 4 [AV 100 TD 90]";
 
 const CanvasManager: React.FC<CanvasManagerProps> = ({
   width,
@@ -223,6 +223,7 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
           className="w-full border-2 border-yellow-500 px-2"
+          placeholder="Type your commands and press Enter to execute"
         />
         <Button
           onClick={() => {

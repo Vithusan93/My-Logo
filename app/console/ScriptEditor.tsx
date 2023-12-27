@@ -39,7 +39,10 @@ const ScriptEditor = ({
   };
 
   return (
-    <div className="bg-neutral-50 rounded-lg">
+    <div className="bg-neutral-50 rounded-lg overflow-hidden">
+      <div className="bg-neutral-200 text-center p-2">
+        <span className="font-bold">SCRIPTS</span>
+      </div>
       <Tabs.Root defaultValue="import">
         <Tabs.List>
           <Tabs.Trigger value="import">Import Script</Tabs.Trigger>
@@ -63,14 +66,16 @@ const ScriptEditor = ({
         />
         <Button onClick={handleSaveToFile}>Download</Button>
       </div>
-      <div className="text-sm font-semibold font-mono">Script Editor</div>
-      <textarea
-        className="w-full h-full border-yellow-500 border-4 p-1 font-mono"
-        value={textAreaContent}
-        onChange={(e) => setTextAreaContent(e.target.value)}
-      />
-      <div>
-        <Button onClick={() => onExecute(textAreaContent)}>Execute</Button>
+      <div className="p-2">
+        <div className="text-sm font-semibold font-mono">Script Editor</div>
+        <textarea
+          className="w-full h-full border-yellow-500 border-4 p-1 font-mono"
+          value={textAreaContent}
+          onChange={(e) => setTextAreaContent(e.target.value)}
+        />
+        <div>
+          <Button onClick={() => onExecute(textAreaContent)}>Execute</Button>
+        </div>
       </div>
     </div>
   );

@@ -9,7 +9,9 @@ const NavBar = () => {
   return (
     <div className="flex justify-between bg-slate-300 p-3 text-gray-800 fixed w-full font-semibold">
       <div className="flex gap-2 items-center">
-        <div>LOGOGAME</div>
+        <div className="font-medium bg-gray-100 px-2 py-1 rounded-md">
+          THE <span className="font-bold">LOGO</span> GAME
+        </div>
         <Link href={"/console"}>
           <div>Console</div>
         </Link>

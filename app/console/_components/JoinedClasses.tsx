@@ -22,7 +22,10 @@ const JoinedClasses = () => {
     <div>
       <div>
         {classes.map((joinedClass) => (
-          <ClassCard logoClass={joinedClass.logoClass} />
+          <ClassCard
+            key={joinedClass.logoClass.name}
+            logoClass={joinedClass.logoClass}
+          />
         ))}
       </div>
     </div>
