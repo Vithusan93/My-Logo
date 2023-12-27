@@ -18,6 +18,7 @@ model User {
   instructingClasses LogoClass[]    @relation("instructors")
   assistingClasses   LogoClass[]    @relation("assistantInstructors")
   ClassStudent       ClassStudent[]
+  Message            Message[]
 }
 
 model LogoClass {
@@ -31,6 +32,7 @@ model LogoClass {
   assistantInstructorId Int?
   assistantInstructor   User?          @relation("assistantInstructors", fields: [assistantInstructorId], references: [id])
   ClassStudent          ClassStudent[]
+  Message               Message[]
 }
 
 model ClassStudent {
@@ -41,4 +43,18 @@ model ClassStudent {
   student   User @relation(fields: [studentId], references: [id])
 
   @@id([logoClassId, studentId])
+}
+
+model Message {
+  id   Int    @id @default(autoincrement())
+  text String
+
+  senderId Int
+  sender   User @relation(fields: [senderId], references: [id])
+
+  logoClassId Int
+  logoClass   LogoClass @relation(fields: [logoClassId], references: [id])
+
+  isVisible Boolean  @default(true)
+  sentTime  DateTime @default(now())
 }

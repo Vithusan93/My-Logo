@@ -1,0 +1,11 @@
+-- CreateTable
+CREATE TABLE "Message" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "text" TEXT NOT NULL,
+    "senderId" INTEGER NOT NULL,
+    "logoClassId" INTEGER NOT NULL,
+    "isVisible" BOOLEAN NOT NULL DEFAULT true,
+    "sentTime" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Message_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Message_logoClassId_fkey" FOREIGN KEY ("logoClassId") REFERENCES "LogoClass" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

@@ -25,6 +25,13 @@ export async function GET(request: NextRequest) {
 
   const logoClasses = await prisma.logoClass.findMany({
     where: { instructorId: parseInt(token["sub"]) },
+    select: {
+      id: true,
+      name: true,
+      password: true,
+      link: true,
+      instructor: { select: { name: true } },
+    },
   });
 
   return NextResponse.json(logoClasses, { status: 200 });
@@ -51,6 +58,13 @@ export async function POST(request: NextRequest) {
       link: link,
       password: password,
       instructorId: parseInt(token["sub"]),
+    },
+  });
+
+  await prisma.classStudent.create({
+    data: {
+      logoClassId: logoClass.id,
+      studentId: parseInt(token["sub"]),
     },
   });
 

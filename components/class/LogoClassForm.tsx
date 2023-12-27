@@ -3,7 +3,7 @@ import { Button, TextField } from "@radix-ui/themes";
 import { signIn, useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { classCreationSchema } from "../api/classes/classSchema";
+import { classCreationSchema } from "../../app/api/classes/classSchema";
 
 type creationType = z.infer<typeof classCreationSchema>;
 
