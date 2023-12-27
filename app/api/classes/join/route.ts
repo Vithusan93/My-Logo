@@ -4,6 +4,24 @@ import { joinSchema } from "./joinSchema";
 
 import { getToken } from "next-auth/jwt";
 
+export async function GET(request: NextRequest) {
+  const token = await getToken({ req: request });
+  if (!token || !token["sub"]) {
+    return NextResponse.json({}, { status: 401 });
+  }
+
+  const logoClasses = await prisma.classStudent.findMany({
+    where: { studentId: parseInt(token["sub"]) },
+    select: {
+      logoClass: {
+        select: { name: true, instructor: { select: { name: true } } },
+      },
+    },
+  });
+
+  return NextResponse.json(logoClasses, { status: 200 });
+}
+
 export async function POST(request: NextRequest) {
   const token = await getToken({ req: request });
   if (!token || !token["sub"]) {
