@@ -13,7 +13,7 @@ const Console = () => {
         <div className="flex-1 bg-slate-300  px-2">
           <ScriptEditor onExecute={setActiveCommand} />
         </div>
-        <div className="bg-slate-50  px-2">
+        <div className="bg-slate-300">
           <CanvasManager
             width={800}
             height={600}

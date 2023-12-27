@@ -206,24 +206,33 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({
   };
 
   return (
-    <div className="bg-neutral-200">
+    <div className="bg-neutral-200 rounded-lg overflow-hidden">
+      <div className="text-center p-2">
+        THE <span className="font-bold">LOGO</span> GAME
+      </div>
       <canvas
         ref={canvasRef}
         width={width}
         height={height}
-        className="bg-neutral-50"
+        className="bg-neutral-100"
       />
-      <label>
-        Input Label:
+      <div className="flex p-2">
         <input
           type="text"
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
-          style={{ border: "1px solid black" }}
-          className="w-full"
+          className="w-full border-2 border-yellow-500 px-2"
         />
-      </label>
+        <Button
+          onClick={() => {
+            injectCommand(inputValue);
+          }}
+        >
+          Execute
+        </Button>
+      </div>
+      <div className="text-center p-2">Usefull buttons can come here</div>
     </div>
   );
 };

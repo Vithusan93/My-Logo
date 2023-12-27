@@ -21,9 +21,7 @@ const NavBar = () => {
         {session ? (
           <div className="flex items-center gap-2 justify-center">
             {session?.user?.email}{" "}
-            <Button variant="outline" onClick={() => signOut()}>
-              Sign Out
-            </Button>
+            <Button onClick={() => signOut()}>Sign Out</Button>
           </div>
         ) : (
           <div>

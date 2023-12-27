@@ -2,6 +2,7 @@
 
 import { Button } from "@radix-ui/themes";
 import React, { useState } from "react";
+import { Tabs, Box, Text } from "@radix-ui/themes";
 
 const ScriptEditor = ({
   onExecute,
@@ -38,17 +39,33 @@ const ScriptEditor = ({
   };
 
   return (
-    <div className="">
+    <div className="bg-neutral-50 rounded-lg">
+      <Tabs.Root defaultValue="import">
+        <Tabs.List>
+          <Tabs.Trigger value="import">Import Script</Tabs.Trigger>
+          <Tabs.Trigger value="classes">Search Script</Tabs.Trigger>
+          <Tabs.Trigger value="newClass">Create Class</Tabs.Trigger>
+        </Tabs.List>
+
+        <Box px="4" pt="3" pb="2">
+          <Tabs.Content value="import"></Tabs.Content>
+          <Tabs.Content value="classes"></Tabs.Content>
+          <Tabs.Content value="newClass">
+            <Text size="2"></Text>
+          </Tabs.Content>
+        </Box>
+      </Tabs.Root>
       <div className="flex justify-between py-1 align-middle items-center gap-1">
         <input
           type="file"
           onChange={handleLoadFile}
-          className="bg-green-500 text-center align-middle h-full"
+          className="text-center align-middle h-full"
         />
         <Button onClick={handleSaveToFile}>Download</Button>
       </div>
+      <div className="text-sm font-semibold font-mono">Script Editor</div>
       <textarea
-        className="w-full h-full"
+        className="w-full h-full border-yellow-500 border-4 p-1 font-mono"
         value={textAreaContent}
         onChange={(e) => setTextAreaContent(e.target.value)}
       />
