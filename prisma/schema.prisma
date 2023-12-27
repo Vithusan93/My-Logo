@@ -23,13 +23,13 @@ model User {
 model LogoClass {
   id       Int    @id @default(autoincrement())
   name     String
-  link     String
+  link     String @unique
   password String
 
   instructorId          Int
   instructor            User           @relation("instructors", fields: [instructorId], references: [id])
   assistantInstructorId Int?
-  assistantInstructor   User?           @relation("assistantInstructors", fields: [assistantInstructorId], references: [id])
+  assistantInstructor   User?          @relation("assistantInstructors", fields: [assistantInstructorId], references: [id])
   ClassStudent          ClassStudent[]
 }
 

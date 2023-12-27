@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, TextField } from "@radix-ui/themes";
-import React from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { classCreationSchema } from "../api/classes/classSchema";
@@ -8,9 +8,20 @@ import { classCreationSchema } from "../api/classes/classSchema";
 type creationType = z.infer<typeof classCreationSchema>;
 
 const LogoClassForm = () => {
-  const { register, handleSubmit } = useForm<creationType>({
+  const { register, handleSubmit, reset } = useForm<creationType>({
     resolver: zodResolver(classCreationSchema),
   });
+
+  const { data: session } = useSession();
+
+  if (!session) {
+    return (
+      <div className="text-center">
+        <div>You are not connected. Sign in to create a class</div>
+        <Button onClick={() => signIn()}>Sign In</Button>
+      </div>
+    );
+  }
   return (
     <div className="">
       <form
@@ -21,16 +32,14 @@ const LogoClassForm = () => {
             method: "POST",
             body: JSON.stringify(data),
           });
-          console.log(response);
+          if (response.status === 201) {
+            reset();
+          }
         })}
       >
         <TextField.Input
           {...register("name")}
           placeholder="Class Name"
-        ></TextField.Input>
-        <TextField.Input
-          {...register("password")}
-          placeholder="Password for joining"
         ></TextField.Input>
         <div className="py-2 w-full">
           <Button className="w-full">Create Class</Button>

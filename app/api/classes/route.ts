@@ -4,6 +4,19 @@ import { classCreationSchema } from "./classSchema";
 
 import { getToken } from "next-auth/jwt";
 
+function generateRandomString(length: number): string {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters.charAt(randomIndex);
+  }
+
+  return result;
+}
+
 export async function GET(request: NextRequest) {
   const token = await getToken({ req: request });
   if (!token || !token["sub"]) {
@@ -23,6 +36,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({}, { status: 401 });
   }
 
+  const link = generateRandomString(10);
+  const password = generateRandomString(6).toUpperCase();
+
   const body = await request.json();
   const validation = classCreationSchema.safeParse(body);
   if (!validation.success) {
@@ -32,8 +48,8 @@ export async function POST(request: NextRequest) {
   const logoClass = await prisma.logoClass.create({
     data: {
       name: body.name,
-      link: "yi",
-      password: body.password,
+      link: link,
+      password: password,
       instructorId: parseInt(token["sub"]),
     },
   });

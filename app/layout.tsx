@@ -24,7 +24,7 @@ export default function RootLayout({
         <ClientSessionProvider>
           <Theme accentColor="green">
             <NavBar />
-            <main>{children}</main>
+            <main className="pt-14">{children}</main>
           </Theme>
         </ClientSessionProvider>
       </body>
