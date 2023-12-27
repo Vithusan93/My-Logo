@@ -18,7 +18,6 @@ const OwnedClassList = () => {
 
   return (
     <div>
-      OwnedClassList
       <div className="">
         {classes.length > 0 ? (
           classes.map((ownedClass) => (

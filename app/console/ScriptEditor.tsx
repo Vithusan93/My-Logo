@@ -38,7 +38,7 @@ const ScriptEditor = ({
   };
 
   return (
-    <div className="h-[60%]">
+    <div className="">
       <div className="flex justify-between py-1 align-middle items-center gap-1">
         <input
           type="file"

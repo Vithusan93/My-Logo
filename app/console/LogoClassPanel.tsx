@@ -1,12 +1,12 @@
 import { Tabs, Box, Text } from "@radix-ui/themes";
 import React from "react";
 import LogoClassForm from "./LogoClassForm";
-import OwnedClassList from "./OwnedClassList";
+import OwnedClassList from "./_components/OwnedClassList";
 import JoinedClasses from "./_components/JoinedClasses";
 
 const LogoClassPanel = () => {
   return (
-    <div>
+    <div className="bg-neutral-50 rounded-lg">
       <Tabs.Root defaultValue="joined">
         <Tabs.List>
           <Tabs.Trigger value="joined">Joined Classes</Tabs.Trigger>

@@ -7,7 +7,7 @@ import React from "react";
 const NavBar = () => {
   const { data: session, status } = useSession();
   return (
-    <div className="flex justify-between bg-green-200 p-3 text-gray-800 fixed w-full font-semibold">
+    <div className="flex justify-between bg-slate-300 p-3 text-gray-800 fixed w-full font-semibold">
       <div className="flex gap-2 items-center">
         <div>LOGOGAME</div>
         <Link href={"/console"}>

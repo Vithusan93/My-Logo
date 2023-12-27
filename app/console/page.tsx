@@ -10,17 +10,17 @@ const Console = () => {
   return (
     <div className="h-screen">
       <div className="flex w-full h-full justify-between">
-        <div className="flex-1 bg-neutral-100  px-2">
+        <div className="flex-1 bg-slate-300  px-2">
           <ScriptEditor onExecute={setActiveCommand} />
         </div>
-        <div className="bg-neutral-50  px-2">
+        <div className="bg-slate-50  px-2">
           <CanvasManager
             width={800}
             height={600}
             commandInput={activeCommand}
           />
         </div>
-        <div className="flex-1 bg-neutral-100  px-2">
+        <div className="flex-1 bg-slate-300  px-2">
           <LogoClassPanel />
         </div>
       </div>

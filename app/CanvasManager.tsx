@@ -206,14 +206,14 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({
   };
 
   return (
-    <div>
+    <div className="bg-neutral-200">
       <canvas
         ref={canvasRef}
         width={width}
         height={height}
-        style={{ border: "1px solid black" }}
+        className="bg-neutral-50"
       />
-      <label style={{ color: "red", display: "block" }}>
+      <label>
         Input Label:
         <input
           type="text"
