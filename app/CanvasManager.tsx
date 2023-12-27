@@ -206,7 +206,7 @@ const CanvasManager: React.FC<CanvasManagerProps> = ({
   };
 
   return (
-    <div className="bg-neutral-200 rounded-lg overflow-hidden">
+    <div className="bg-neutral-200 rounded-lg overflow-hidden shadow-md">
       <div className="text-center p-2">
         THE <span className="font-bold">LOGO</span> GAME
       </div>

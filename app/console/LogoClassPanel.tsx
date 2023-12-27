@@ -6,7 +6,7 @@ import JoinedClasses from "./_components/JoinedClasses";
 
 const LogoClassPanel = () => {
   return (
-    <div className="bg-neutral-50 rounded-lg">
+    <div className="bg-neutral-50 rounded-lg overflow-hidden shadow-md">
       <div className="bg-neutral-200 text-center p-2">
         <span className="font-bold">CLASS</span>
       </div>

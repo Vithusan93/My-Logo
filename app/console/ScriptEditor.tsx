@@ -39,7 +39,7 @@ const ScriptEditor = ({
   };
 
   return (
-    <div className="bg-neutral-50 rounded-lg overflow-hidden">
+    <div className="bg-neutral-50 rounded-lg overflow-hidden shadow-md">
       <div className="bg-neutral-200 text-center p-2">
         <span className="font-bold">SCRIPTS</span>
       </div>
@@ -47,15 +47,11 @@ const ScriptEditor = ({
         <Tabs.List>
           <Tabs.Trigger value="import">Import Script</Tabs.Trigger>
           <Tabs.Trigger value="classes">Search Script</Tabs.Trigger>
-          <Tabs.Trigger value="newClass">Create Class</Tabs.Trigger>
         </Tabs.List>
 
         <Box px="4" pt="3" pb="2">
           <Tabs.Content value="import"></Tabs.Content>
           <Tabs.Content value="classes"></Tabs.Content>
-          <Tabs.Content value="newClass">
-            <Text size="2"></Text>
-          </Tabs.Content>
         </Box>
       </Tabs.Root>
       <div className="flex justify-between py-1 align-middle items-center gap-1">
