@@ -19,7 +19,7 @@ const SelectClass = ({
   const [classes, setClasses] = useState<JoinedClasses[]>([]);
   useEffect(() => {
     const getJoinedClasses = async () => {
-      const response = await fetch("/api/classes/join/");
+      const response = await fetch("/api/classes/join/", { cache: "no-store" });
       if (response.status === 200) {
         const data = await response.json();
         setClasses(data);

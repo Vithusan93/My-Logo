@@ -41,16 +41,20 @@ const ClassChat = () => {
         }
       }
     };
-    getMessages();
+
+    const interval = setInterval(() => {
+      getMessages();
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="flex flex-col justify-end h-full">
+    <div className=" flex-col justify-end ">
       <div className="flex flex-1 flex-col gap-1 justify-start">
         {messages.map((message) => (
           <div
             key={message.id}
-            className="bg-blue-200 p-2 rounded-md rounded-tl-none"
+            className="bg-yellow-50 p-2 rounded-md rounded-tl-none"
           >
             <div className="text-sm font-bold">{message.sender.name}</div>
             <div>{message.text}</div>

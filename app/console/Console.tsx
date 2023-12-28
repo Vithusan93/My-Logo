@@ -2,7 +2,7 @@
 import { useState } from "react";
 import CanvasManager from "../CanvasManager";
 import ScriptEditor from "./ScriptEditor";
-import LogoClassPanel from "./LogoClassPanel";
+import LogoClassPanel from "../../components/class/LogoClassPanel";
 import { Button, Dialog, Flex, TextField } from "@radix-ui/themes";
 
 export const Console = () => {

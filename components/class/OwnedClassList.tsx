@@ -34,7 +34,9 @@ const OwnedClassList = () => {
                 <Box>
                   <Text as="div" size="2" color="gray">
                     Joining Link:{" "}
-                    {`${process.env.NEXT_PUBLIC_BASE_URL}/${ownedClass.link}`}
+                    <div className="text-blue-500">
+                      {`${process.env.NEXT_PUBLIC_BASE_URL}/console?joinID=${ownedClass.link}`}
+                    </div>
                   </Text>
                   <Text as="div" size="2" color="gray">
                     Password:{ownedClass.password}
