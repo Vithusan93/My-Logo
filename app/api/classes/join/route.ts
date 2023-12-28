@@ -14,7 +14,11 @@ export async function GET(request: NextRequest) {
     where: { studentId: parseInt(token["sub"]) },
     select: {
       logoClass: {
-        select: { name: true, instructor: { select: { name: true } } },
+        select: {
+          id: true,
+          name: true,
+          instructor: { select: { name: true } },
+        },
       },
     },
   });
