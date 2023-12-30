@@ -1,3 +1,4 @@
+import { Button } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
 
 const ACTION_COMMANDS = ["AV", "RE", "TD", "TG"];
@@ -7,6 +8,7 @@ interface Position {
   y: number;
   angle: number;
 }
+const simpleSquare = "REPETE 4 [AV 100 TD 90]";
 
 const LogoDisplay = ({
   width,
@@ -24,6 +26,7 @@ const LogoDisplay = ({
     y: height / 2,
     angle: 0,
   });
+  const [inputValue, setInputValue] = useState<string>(simpleSquare);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -71,6 +74,17 @@ const LogoDisplay = ({
       context.translate(-position.x, -position.y);
     }
     return position;
+  };
+
+  const reset = () => {
+    if (context) {
+      context.reset();
+      setCurrentPosition({
+        x: width / 2,
+        y: height / 2,
+        angle: 0,
+      });
+    }
   };
 
   const executeActionCommand = (
@@ -150,13 +164,47 @@ const LogoDisplay = ({
     return position;
   };
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      injectCommand(inputValue);
+    }
+  };
+
   return (
-    <canvas
-      ref={canvasRef}
-      width={width}
-      height={height}
-      className="bg-neutral-100 w-full h-full"
-    />
+    <div className="bg-neutral-300 h-full">
+      <canvas
+        ref={canvasRef}
+        width={width}
+        height={height}
+        className="bg-neutral-100 mx-auto h-full"
+      />
+      <div>
+        <Button variant="surface" onClick={() => reset()}>
+          Reset
+        </Button>
+      </div>
+      <div className="flex p-2">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleInputKeyDown}
+          className="w-full border-2 border-yellow-500 px-2"
+          placeholder="Type your commands and press Enter to execute"
+        />
+        <Button
+          onClick={() => {
+            injectCommand(inputValue);
+          }}
+        >
+          Execute
+        </Button>
+      </div>
+    </div>
   );
 };
 

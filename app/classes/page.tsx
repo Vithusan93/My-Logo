@@ -39,7 +39,7 @@ const ClassesPage = () => {
             isAdmin={isAdmin}
           />
           {isAdmin && <TaskResponses />}
-          <TaskDetail />
+          <TaskDetail task={task} />
         </div>
       </div>
     </div>
