@@ -9,6 +9,7 @@ import ClassPanel from "./_components/ClassPanel";
 import SelectClass from "./_components/SelectClass";
 import { Button } from "@radix-ui/themes";
 import LogoClassPanel from "@/components/class/LogoClassPanel";
+import LogoDisplay from "@/components/logo/LogoDisplay";
 
 const Console = () => {
   const [activeCommand, setActiveCommand] = useState("");
