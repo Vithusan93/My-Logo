@@ -32,11 +32,7 @@ const Console = () => {
             <ScriptEditor onExecute={setActiveCommand} />
           </div>
           <div className="">
-            <CanvasManager
-              width={800}
-              height={600}
-              commandInput={activeCommand}
-            />
+            <CanvasManager commandInput={activeCommand} />
           </div>
           <div className="flex flex-col gap-2 flex-1 px-2">
             <LogoClassPanel />

@@ -11,6 +11,7 @@ const ClassPanel = ({
   onClassSelect: (logoClass: PublicLogoClass) => void;
 }) => {
   const [classes, setClasses] = useState<JoinedClasses[]>([]);
+  const [selectedClass, setSelectedClass] = useState<PublicLogoClass>();
 
   useEffect(() => {
     const getJoinedClasses = async () => {
@@ -22,6 +23,7 @@ const ClassPanel = ({
     };
     getJoinedClasses();
   }, []);
+
   return (
     <div className="w-1/4">
       <div className="bg-neutral-200 text-center p-1 border-r-2 border-gray-400">
@@ -32,9 +34,12 @@ const ClassPanel = ({
           <div
             key={joinedClass.logoClass.name}
             onClick={() => {
+              setSelectedClass(joinedClass.logoClass);
               onClassSelect(joinedClass.logoClass);
             }}
-            className="cursor-pointer"
+            className={`cursor-pointer ${
+              selectedClass?.id === joinedClass.logoClass.id && "bg-yellow-500"
+            }`}
           >
             <ClassCard logoClass={joinedClass.logoClass} />
           </div>

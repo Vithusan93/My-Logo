@@ -7,12 +7,6 @@ interface CanvasManagerProps {
   commandInput?: string;
 }
 
-interface Position {
-  x: number;
-  y: number;
-  angle: number;
-}
-
 const simpleSquare = "REPETE 4 [AV 100 TD 90]";
 
 const CanvasManager: React.FC<CanvasManagerProps> = ({ commandInput }) => {

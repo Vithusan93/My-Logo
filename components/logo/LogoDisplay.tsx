@@ -151,14 +151,12 @@ const LogoDisplay = ({
   };
 
   return (
-    <div>
-      <canvas
-        ref={canvasRef}
-        width={width}
-        height={height}
-        className="bg-neutral-100"
-      />
-    </div>
+    <canvas
+      ref={canvasRef}
+      width={width}
+      height={height}
+      className="bg-neutral-100 w-full h-full"
+    />
   );
 };
 
