@@ -2,18 +2,15 @@ import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 import { getToken } from "next-auth/jwt";
-import { Message } from "@prisma/client";
-
-export async function GET(
+export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string; messageId: string } }
 ) {
   const token = await getToken({ req: request });
   if (!token || !token["sub"]) {
     return NextResponse.json({}, { status: 401 });
   }
 
-  // TODO: Check if the user belongs to class
   const logoClass = await prisma.logoClass.findUnique({
     where: { id: parseInt(params.id) },
     select: { instructor: true, assistantInstructor: true },
@@ -30,39 +27,19 @@ export async function GET(
       ? usedId === logoClass?.assistantInstructor.id
       : false);
 
-  const filter: Partial<Message> = { logoClassId: parseInt(params.id) };
-
   if (!isAdmin) {
-    filter.isVisible = true;
-  }
-
-  const messages = await prisma.message.findMany({
-    where: filter,
-    include: { sender: true },
-  });
-
-  return NextResponse.json(messages, { status: 200 });
-}
-
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const token = await getToken({ req: request });
-  if (!token || !token["sub"]) {
-    return NextResponse.json({}, { status: 401 });
+    return NextResponse.json({}, { status: 400 });
   }
 
   // TODO: Check if the user belongs to class
   const body = await request.json();
 
-  const messages = await prisma.message.create({
+  const message = await prisma.message.update({
     data: {
-      text: body.text,
-      logoClassId: parseInt(params.id),
-      senderId: parseInt(token["sub"]),
+      isVisible: body.isVisible,
     },
+    where: { id: parseInt(params.messageId) },
   });
 
-  return NextResponse.json(messages, { status: 201 });
+  return NextResponse.json(message, { status: 200 });
 }

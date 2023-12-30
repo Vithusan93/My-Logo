@@ -3,7 +3,8 @@ import { Box, Card, Flex, Text } from "@radix-ui/themes";
 export interface PublicLogoClass {
   id: number;
   name: string;
-  instructor: { name: string };
+  instructor: { id: number; name: string };
+  assistantInstructor: { id: number; name: string };
 }
 
 const ClassCard = ({ logoClass }: { logoClass: PublicLogoClass }) => {

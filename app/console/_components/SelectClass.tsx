@@ -17,6 +17,7 @@ const SelectClass = ({
   onClassSelect: (logoClass: PublicLogoClass) => void;
 }) => {
   const [classes, setClasses] = useState<JoinedClasses[]>([]);
+
   useEffect(() => {
     const getJoinedClasses = async () => {
       const response = await fetch("/api/classes/join/", { cache: "no-store" });
@@ -27,6 +28,7 @@ const SelectClass = ({
     };
     getJoinedClasses();
   }, []);
+
   return (
     <Dialog.Root open={selectingClass} onOpenChange={setSelectingClass}>
       <Dialog.Content style={{ maxWidth: 450 }}>

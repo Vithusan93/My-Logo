@@ -41,7 +41,7 @@ const Console = () => {
             <LogoClassPanel />
             <div className="bg-neutral-50 rounded-lg overflow-hidden shadow-md">
               <div className="bg-neutral-200 text-center p-2">
-                <span className="font-bold">YOUR CLASS</span>
+                <span className="font-bold">Active Class</span>
               </div>
               <div className="flex items-center p-2 justify-between">
                 <div>{logoClass ? logoClass.name : "class not selected"}</div>

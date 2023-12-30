@@ -17,7 +17,8 @@ export async function GET(request: NextRequest) {
         select: {
           id: true,
           name: true,
-          instructor: { select: { name: true } },
+          instructor: { select: { id: true, name: true } },
+          assistantInstructor: { select: { id: true, name: true } },
         },
       },
     },

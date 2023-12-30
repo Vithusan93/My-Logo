@@ -1,9 +1,9 @@
 import prisma from "@/prisma/client";
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   // Configure one or more authentication providers
   providers: [
     CredentialsProvider({
@@ -17,6 +17,7 @@ export const authOptions = {
         email: { label: "Email", type: "text", placeholder: "" },
         password: { label: "Password", type: "password" },
       },
+
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
 
@@ -52,6 +53,18 @@ export const authOptions = {
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.user_id = parseInt(user.id);
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.user_id = token.user_id;
+      return session;
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);
