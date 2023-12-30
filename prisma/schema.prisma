@@ -19,6 +19,7 @@ model User {
   assistingClasses   LogoClass[]    @relation("assistantInstructors")
   ClassStudent       ClassStudent[]
   Message            Message[]
+  StudentTask        StudentTask[]
 }
 
 model LogoClass {
@@ -33,6 +34,7 @@ model LogoClass {
   assistantInstructor   User?          @relation("assistantInstructors", fields: [assistantInstructorId], references: [id])
   ClassStudent          ClassStudent[]
   Message               Message[]
+  Task                  Task[]
 }
 
 model ClassStudent {
@@ -57,4 +59,31 @@ model Message {
 
   isVisible Boolean  @default(true)
   sentTime  DateTime @default(now())
+}
+
+model Task {
+  id       Int    @id @default(autoincrement())
+  question String
+  script   String @default("")
+
+  logoClassId Int
+  logoClass   LogoClass @relation(fields: [logoClassId], references: [id])
+  createdAt   DateTime  @default(now())
+
+  StudentTask StudentTask[]
+}
+
+model StudentTask {
+  studentId Int
+  student   User @relation(fields: [studentId], references: [id])
+
+  taskId Int
+  task   Task @relation(fields: [taskId], references: [id])
+
+  script      String  @default("")
+  isSubmitted Boolean @default(false)
+
+  points Int?
+
+  @@id([studentId, taskId])
 }

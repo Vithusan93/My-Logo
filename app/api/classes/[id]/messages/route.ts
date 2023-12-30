@@ -14,6 +14,7 @@ export async function GET(
   }
 
   // TODO: Check if the user belongs to class
+
   const logoClass = await prisma.logoClass.findUnique({
     where: { id: parseInt(params.id) },
     select: { instructor: true, assistantInstructor: true },
