@@ -27,7 +27,10 @@ const NavBar = () => {
               <Button onClick={() => signOut()}>Sign Out</Button>
             </div>
           ) : (
-            <div>
+            <div className="flex gap-2">
+              <Link href={"/auth/signup"}>
+                <Button variant="surface">Sign Up </Button>
+              </Link>
               <Button onClick={() => signIn()}>Sign In </Button>
             </div>
           )}

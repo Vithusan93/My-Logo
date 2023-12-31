@@ -3,6 +3,7 @@
 import { userCreationSchema } from "@/app/api/signup/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@radix-ui/themes";
+import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,6 +17,10 @@ const SignUp = () => {
   } = useForm<creationType>({ resolver: zodResolver(userCreationSchema) });
 
   const router = useRouter();
+  const { data: session } = useSession();
+  if (session) {
+    router.push("/console");
+  }
   return (
     <div className="">
       <div className="">
