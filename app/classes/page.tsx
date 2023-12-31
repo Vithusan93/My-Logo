@@ -30,9 +30,9 @@ const ClassesPage = () => {
       : false);
 
   return (
-    <div className="pt-14 p-2">
-      <div className="bg-neutral-50 rounded-lg overflow-hidden shadow-md">
-        <div className="flex">
+    <div className="pt-14 p-2 h-screen">
+      <div className="bg-neutral-50 rounded-lg overflow-hidden shadow-md h-full">
+        <div className="flex h-full">
           <ClassPanel onClassSelect={setLogoClass} />
           <TaskPanel
             logoClass={logoClass}

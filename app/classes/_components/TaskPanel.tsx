@@ -6,7 +6,7 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import TaskForm from "./TaskForm";
 
 interface TaskWithResponse extends Task {
-  StudentTask: TaskResponse[];
+  StudentTask?: TaskResponse[];
 }
 
 const TaskPanel = ({

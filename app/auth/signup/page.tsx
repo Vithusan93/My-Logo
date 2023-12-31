@@ -4,7 +4,7 @@ import { userCreationSchema } from "@/app/api/signup/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@radix-ui/themes";
 import { useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -26,12 +26,11 @@ const SignUp = () => {
       <div className="">
         <section className="bg-neutral-800">
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-            <a
-              href="#"
-              className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-            >
-              MyLogo
-            </a>
+            <div className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+              <div className="font-medium bg-gray-100 px-2 py-1 rounded-md text-gray-800">
+                THE <span className="font-bold">LOGO</span> GAME
+              </div>
+            </div>
             <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-neutral-900 dark:border-neutral-900">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">

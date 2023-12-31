@@ -102,14 +102,14 @@ const TaskDetail = ({
   };
 
   return (
-    <div className="w-full">
+    <div className="flex flex-col w-full h-full">
       <div className="bg-neutral-200 text-center p-1 border-r-2 border-gray-400">
         <span className="font-bold">Task Detail</span>
       </div>
       <div className="bg-neutral-100 p-2 rounded-md">
         {task ? `Question: ${task.question}` : "Select a task"}
       </div>
-      <div className="min-h-1/2">
+      <div className="flex-1 min-h-1/2">
         <LogoDisplay width={800} height={600} commandInput={command} />
       </div>
       <div className="p-1 bg-neutral-200 my-1">

@@ -1,7 +1,6 @@
 "use client";
 import LogoDisplay from "@/components/logo/LogoDisplay";
-import { Button } from "@radix-ui/themes";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 interface CanvasManagerProps {
   commandInput?: string;
@@ -9,11 +8,13 @@ interface CanvasManagerProps {
 
 const CanvasManager: React.FC<CanvasManagerProps> = ({ commandInput }) => {
   return (
-    <div className="bg-neutral-200 rounded-lg overflow-hidden shadow-md">
+    <div className="flex flex-col bg-neutral-200 rounded-lg overflow-hidden shadow-md h-full">
       <div className="text-center p-2">
         THE <span className="font-bold">LOGO</span> GAME
       </div>
-      <LogoDisplay width={800} height={600} commandInput={commandInput} />
+      <div className="flex-1">
+        <LogoDisplay width={800} height={600} commandInput={commandInput} />
+      </div>
       <div className="text-center p-2">Usefull buttons can come here</div>
     </div>
   );

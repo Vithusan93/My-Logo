@@ -69,7 +69,7 @@ const ScriptEditor = ({
           value={textAreaContent}
           onChange={(e) => setTextAreaContent(e.target.value)}
         />
-        <div>
+        <div className="py-2">
           <Button onClick={() => onExecute(textAreaContent)}>Execute</Button>
         </div>
       </div>

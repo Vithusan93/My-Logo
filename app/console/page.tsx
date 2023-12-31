@@ -2,14 +2,13 @@
 import { PublicLogoClass } from "@/components/class/ClassCard";
 import { ClassContext } from "@/components/class/ClassContext";
 import JoinClass from "@/components/class/JoinClass";
+import LogoClassPanel from "@/components/class/LogoClassPanel";
+import { Button } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import CanvasManager from "../CanvasManager";
 import ScriptEditor from "./ScriptEditor";
 import ClassPanel from "./_components/ClassPanel";
 import SelectClass from "./_components/SelectClass";
-import { Button } from "@radix-ui/themes";
-import LogoClassPanel from "@/components/class/LogoClassPanel";
-import LogoDisplay from "@/components/logo/LogoDisplay";
 
 const Console = () => {
   const [activeCommand, setActiveCommand] = useState("");
@@ -31,7 +30,7 @@ const Console = () => {
           <div className="flex-1 px-2">
             <ScriptEditor onExecute={setActiveCommand} />
           </div>
-          <div className="">
+          <div className="w-full h-full min-h-1/2">
             <CanvasManager commandInput={activeCommand} />
           </div>
           <div className="flex flex-col gap-2 flex-1 px-2">

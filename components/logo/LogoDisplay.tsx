@@ -24,7 +24,12 @@ const LogoDisplay = ({
   commandInput?: string;
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasTurtleRef = useRef<HTMLCanvasElement | null>(null);
+
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
+  const [ctxTurtle, setCtxTurtle] = useState<CanvasRenderingContext2D | null>(
+    null
+  );
   const [currentPosition, setCurrentPosition] = useState<Position>({
     x: width / 2,
     y: height / 2,
@@ -35,11 +40,12 @@ const LogoDisplay = ({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (canvas) {
+    const turtleCanvas = canvasTurtleRef.current;
+    if (canvas && turtleCanvas) {
       const ctx = canvas.getContext("2d");
       setContext(ctx);
-      // Définir le point de départ au centre du canvas
-      console.log("injection", commandInput);
+      const ctxTurtle = turtleCanvas.getContext("2d");
+      setCtxTurtle(ctxTurtle);
 
       if (commandInput) {
         injectCommand(commandInput);
@@ -57,9 +63,25 @@ const LogoDisplay = ({
       .replace("\n", " ");
     const commandArgs = validatedCommmand.split(" ");
     [position, procedures] = executeCommand(commandArgs, position, procedures);
+    drawTurtle(position);
     setCurrentPosition(position);
     setProcedures(procedures);
     console.log(procedures);
+  };
+
+  const drawTurtle = (position: Position) => {
+    if (ctxTurtle) {
+      ctxTurtle.clearRect(0, 0, width, height);
+
+      const size = 10; // Adjust the size of the turtle
+
+      ctxTurtle.beginPath();
+      ctxTurtle.moveTo(position.x - size, position.y);
+      ctxTurtle.lineTo(position.x, position.y - size);
+      ctxTurtle.lineTo(position.x + size, position.y);
+      ctxTurtle.closePath();
+      ctxTurtle.fill();
+    }
   };
 
   const translate = (position: Position, distance: number): Position => {
@@ -80,6 +102,12 @@ const LogoDisplay = ({
       context.translate(position.x, position.y);
       context.rotate((angle * Math.PI) / 180);
       context.translate(-position.x, -position.y);
+      position.angle += angle;
+    }
+    if (ctxTurtle) {
+      ctxTurtle.translate(position.x, position.y);
+      ctxTurtle.rotate((angle * Math.PI) / 180);
+      ctxTurtle.translate(-position.x, -position.y);
     }
     return position;
   };
@@ -89,6 +117,11 @@ const LogoDisplay = ({
       context.resetTransform();
       context.clearRect(0, 0, width, height);
       setCurrentPosition({
+        x: width / 2,
+        y: height / 2,
+        angle: 0,
+      });
+      drawTurtle({
         x: width / 2,
         y: height / 2,
         angle: 0,
@@ -234,13 +267,22 @@ const LogoDisplay = ({
   };
 
   return (
-    <div className="bg-neutral-300 h-full">
-      <canvas
-        ref={canvasRef}
-        width={width}
-        height={height}
-        className="bg-neutral-100 mx-auto h-full"
-      />
+    <div className="flex flex-col bg-neutral-300 h-full">
+      <div className="flex-1 relative overflow-hidden">
+        <canvas
+          ref={canvasRef}
+          width={width}
+          height={height}
+          className="bg-red-100 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2 h-full "
+        />
+        <canvas
+          ref={canvasTurtleRef}
+          width={width}
+          height={height}
+          className="bg-green-200 opacity-50 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2 h-full "
+        />
+      </div>
+
       <div>
         <Button variant="surface" onClick={() => reset()}>
           Reset
