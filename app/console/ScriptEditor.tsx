@@ -39,7 +39,7 @@ const ScriptEditor = ({
   };
 
   return (
-    <div className="bg-neutral-50 rounded-lg overflow-hidden shadow-md">
+    <div className="flex flex-col bg-neutral-50 rounded-lg overflow-hidden shadow-md h-full">
       <div className="bg-neutral-200 text-center p-2">
         <span className="font-bold">SCRIPTS</span>
       </div>
@@ -62,10 +62,10 @@ const ScriptEditor = ({
         />
         <Button onClick={handleSaveToFile}>Download</Button>
       </div>
-      <div className="p-2">
+      <div className="flex  flex-col flex-1 p-2">
         <div className="text-sm font-semibold font-mono">Script Editor</div>
         <textarea
-          className="w-full h-full border-yellow-500 border-4 p-1 font-mono"
+          className="flex-1 w-full border-yellow-500 border-4 p-1 font-mono"
           value={textAreaContent}
           onChange={(e) => setTextAreaContent(e.target.value)}
         />

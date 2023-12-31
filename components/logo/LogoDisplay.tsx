@@ -10,6 +10,10 @@ interface Position {
 }
 const simpleSquare = "REPETE 4 [AV 100 TD 90]";
 
+interface Procedure {
+  commands: string[];
+}
+
 const LogoDisplay = ({
   width,
   height,
@@ -27,6 +31,7 @@ const LogoDisplay = ({
     angle: 0,
   });
   const [inputValue, setInputValue] = useState<string>(simpleSquare);
+  const [procedureList, setProcedures] = useState({});
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -44,14 +49,17 @@ const LogoDisplay = ({
 
   const injectCommand = (injectedCommand: string) => {
     let position = { ...currentPosition };
+    let procedures = { ...procedureList };
 
     const validatedCommmand = injectedCommand
       .toUpperCase()
       .replace(/\s+/g, " ")
       .replace("\n", " ");
     const commandArgs = validatedCommmand.split(" ");
-    position = executeCommand(commandArgs, position);
+    [position, procedures] = executeCommand(commandArgs, position, procedures);
     setCurrentPosition(position);
+    setProcedures(procedures);
+    console.log(procedures);
   };
 
   const translate = (position: Position, distance: number): Position => {
@@ -112,8 +120,13 @@ const LogoDisplay = ({
     return position;
   };
 
-  const executeCommand = (commands: string[], position: Position): Position => {
+  const executeCommand = (
+    commands: string[],
+    position: Position,
+    procedures: any
+  ): [Position, Procedure[]] => {
     //TODO Do validation and cleaning
+    console.log(commands);
 
     for (let i = 0; i < commands.length; i++) {
       const command = commands[i];
@@ -132,7 +145,7 @@ const LogoDisplay = ({
 
         if (!commands[i].startsWith("[")) {
           console.log("ERROR");
-          return position;
+          return [position, procedures];
         }
         const starter = commands[i].slice(1);
         loopCommands.push(starter);
@@ -157,12 +170,38 @@ const LogoDisplay = ({
         }
 
         for (let k = 0; k < loopCount; k++) {
-          position = executeCommand(loopCommands, position);
+          [position, procedures] = executeCommand(
+            loopCommands,
+            position,
+            procedures
+          );
         }
+      } else if (command === "POUR") {
+        //TODO Handle params
+        i += 1;
+        const procedureName = commands[i];
+        i += 1;
+
+        const procedureCommands = [];
+        while (commands[i] != "FIN") {
+          if (commands[i].startsWith(":")) {
+            // TODO Add params
+          }
+          procedureCommands.push(commands[i]);
+          i += 1;
+        }
+        const procedure = { commands: procedureCommands };
+        procedures[procedureName] = procedure;
+      } else if (command in procedures) {
+        [position, procedures] = executeCommand(
+          procedures[command].commands,
+          position,
+          procedures
+        );
       }
     }
 
-    return position;
+    return [position, procedures];
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
