@@ -4,7 +4,13 @@ import { Task, TaskResponse } from "@prisma/client";
 import { Button } from "@radix-ui/themes";
 import React, { useEffect, useState } from "react";
 
-const TaskDetail = ({ task }: { task?: Task }) => {
+const TaskDetail = ({
+  task,
+  responseId,
+}: {
+  task?: Task;
+  responseId: number;
+}) => {
   const [textAreaContent, setTextAreaContent] = useState("");
   const [command, setCommand] = useState("");
 
@@ -14,7 +20,7 @@ const TaskDetail = ({ task }: { task?: Task }) => {
     const getResponse = async () => {
       if (task) {
         const response = await fetch(
-          `/api/classes/0/tasks/${task.id}/responses/0`
+          `/api/classes/0/tasks/${task.id}/responses/${responseId}`
         );
         if (response.ok) {
           const responseData = await response.json();
@@ -28,7 +34,7 @@ const TaskDetail = ({ task }: { task?: Task }) => {
       }
     };
     getResponse();
-  }, [task]);
+  }, [task, responseId]);
 
   const saveResponse = async () => {
     if (task) {

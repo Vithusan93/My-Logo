@@ -5,7 +5,7 @@ import TaskPanel from "./_components/TaskPanel";
 import ClassPanel from "./_components/ClassPanel";
 import { Task } from "@prisma/client";
 import TaskDetail from "./_components/TaskDetail";
-import TaskResponses from "./_components/TaskResponses";
+import TaskResponses, { TaskResponseDetail } from "./_components/TaskResponses";
 import { useSession } from "next-auth/react";
 
 interface JoinedClasses {
@@ -16,6 +16,7 @@ const ClassesPage = () => {
   const [logoClass, setLogoClass] = useState<PublicLogoClass>();
 
   const [task, setTask] = useState<Task>();
+  const [taskResponse, setTaskResponse] = useState<TaskResponseDetail>();
   const { data: session } = useSession();
 
   if (!session) {
@@ -38,8 +39,13 @@ const ClassesPage = () => {
             onTaskSelect={setTask}
             isAdmin={isAdmin}
           />
-          {isAdmin && <TaskResponses task={task} />}
-          <TaskDetail task={task} />
+          {isAdmin && (
+            <TaskResponses task={task} onResponseSelect={setTaskResponse} />
+          )}
+          <TaskDetail
+            task={task}
+            responseId={taskResponse ? taskResponse.student.id : 0}
+          />
         </div>
       </div>
     </div>
