@@ -183,18 +183,37 @@ const LogoDisplay = ({
         i += 1;
 
         const procedureCommands = [];
+        const procedureParams = [];
+        let fetchingParams = true;
         while (commands[i] != "FIN") {
-          if (commands[i].startsWith(":")) {
-            // TODO Add params
+          if (fetchingParams && commands[i].startsWith(":")) {
+            procedureParams.push(commands[i]);
+          } else {
+            fetchingParams = false;
+            procedureCommands.push(commands[i]);
           }
-          procedureCommands.push(commands[i]);
           i += 1;
         }
-        const procedure = { commands: procedureCommands };
+        const procedure = {
+          commands: procedureCommands,
+          params: procedureParams,
+        };
         procedures[procedureName] = procedure;
       } else if (command in procedures) {
+        let procedureCommands = [...procedures[command].commands];
+        console.log(procedureCommands);
+        for (let j = 0; j < procedures[command].params.length; j++) {
+          i += 1;
+          let paramValue = commands[i];
+          let paramKey = procedures[command].params[j];
+          procedureCommands = procedureCommands.map((item) =>
+            item.replace(paramKey, paramValue)
+          );
+        }
+        console.log(procedureCommands);
+
         [position, procedures] = executeCommand(
-          procedures[command].commands,
+          procedureCommands,
           position,
           procedures
         );
