@@ -78,7 +78,8 @@ const LogoDisplay = ({
 
   const reset = () => {
     if (context) {
-      context.reset();
+      context.resetTransform();
+      context.clearRect(0, 0, width, height);
       setCurrentPosition({
         x: width / 2,
         y: height / 2,

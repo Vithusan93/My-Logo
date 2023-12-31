@@ -1,18 +1,9 @@
 import { PublicLogoClass } from "@/components/class/ClassCard";
 import { Task } from "@prisma/client";
-import {
-  Box,
-  Button,
-  Card,
-  Dialog,
-  Flex,
-  Text,
-  TextField,
-} from "@radix-ui/themes";
-import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
-import TaskForm from "./TaskForm";
+import { Box, Button, Card, Flex, Text } from "@radix-ui/themes";
+import { useEffect, useState } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import TaskForm from "./TaskForm";
 const TaskPanel = ({
   logoClass,
   onTaskSelect,

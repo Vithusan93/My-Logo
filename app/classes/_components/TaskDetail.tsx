@@ -1,11 +1,74 @@
+"use client";
 import LogoDisplay from "@/components/logo/LogoDisplay";
-import { Task } from "@prisma/client";
+import { Task, TaskResponse } from "@prisma/client";
 import { Button } from "@radix-ui/themes";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const TaskDetail = ({ task }: { task?: Task }) => {
   const [textAreaContent, setTextAreaContent] = useState("");
   const [command, setCommand] = useState("");
+
+  const [taskResponse, setTaskResponse] = useState<TaskResponse | null>();
+
+  useEffect(() => {
+    const getResponse = async () => {
+      if (task) {
+        const response = await fetch(
+          `/api/classes/0/tasks/${task.id}/responses/0`
+        );
+        if (response.ok) {
+          const responseData = await response.json();
+          setTextAreaContent(responseData.script);
+          setTaskResponse(responseData);
+        }
+        if (response.status === 404) {
+          setTextAreaContent("");
+          setCommand("");
+        }
+      }
+    };
+    getResponse();
+  }, [task]);
+
+  const saveResponse = async () => {
+    if (task) {
+      const response = await fetch(
+        `/api/classes/0/tasks/${task.id}/responses`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            script: textAreaContent,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const responseData = await response.json();
+
+        setTaskResponse(responseData);
+      }
+    }
+  };
+
+  const submitResponse = async () => {
+    if (task) {
+      const response = await fetch(
+        `/api/classes/0/tasks/${task.id}/responses`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            script: textAreaContent,
+            isSubmitted: true,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const responseData = await response.json();
+        setTaskResponse(responseData);
+      }
+    }
+  };
 
   return (
     <div className="w-full">
@@ -15,16 +78,18 @@ const TaskDetail = ({ task }: { task?: Task }) => {
       <div className="bg-neutral-100 p-2 rounded-md">
         {task ? `Question: ${task.question}` : "Select a task"}
       </div>
-      <div className="h-1/2">
+      <div className="min-h-1/2">
         <LogoDisplay width={800} height={600} commandInput={command} />
       </div>
-      <div>
+      <div className="p-2">
         <div>Response</div>
         <div>
           <textarea
             className="w-full h-full border-yellow-500 border-4 p-1 font-mono"
             value={textAreaContent}
             onChange={(e) => setTextAreaContent(e.target.value)}
+            defaultValue={taskResponse?.script}
+            readOnly={taskResponse?.isSubmitted}
           />
         </div>
         <div className="flex gap-2">
@@ -36,8 +101,15 @@ const TaskDetail = ({ task }: { task?: Task }) => {
           >
             Execute
           </Button>
-          <Button variant="surface">Save</Button>
-          <Button>Submit</Button>
+          <Button
+            variant="surface"
+            onClick={() => {
+              saveResponse();
+            }}
+          >
+            Save
+          </Button>
+          <Button onClick={() => submitResponse()}>Submit</Button>
         </div>
       </div>
     </div>

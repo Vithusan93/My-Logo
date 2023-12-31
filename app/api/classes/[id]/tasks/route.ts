@@ -1,8 +1,8 @@
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
+import { Task } from "@prisma/client";
 import { getToken } from "next-auth/jwt";
-import { Message, Task } from "@prisma/client";
 import { taskSchema } from "./taskSchema";
 
 export async function GET(

@@ -38,7 +38,7 @@ const ClassesPage = () => {
             onTaskSelect={setTask}
             isAdmin={isAdmin}
           />
-          {isAdmin && <TaskResponses />}
+          {isAdmin && <TaskResponses task={task} />}
           <TaskDetail task={task} />
         </div>
       </div>

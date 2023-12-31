@@ -19,7 +19,7 @@ model User {
   assistingClasses   LogoClass[]    @relation("assistantInstructors")
   ClassStudent       ClassStudent[]
   Message            Message[]
-  StudentTask        StudentTask[]
+  StudentTask        TaskResponse[]
 }
 
 model LogoClass {
@@ -70,10 +70,10 @@ model Task {
   logoClass   LogoClass @relation(fields: [logoClassId], references: [id])
   createdAt   DateTime  @default(now())
 
-  StudentTask StudentTask[]
+  StudentTask TaskResponse[]
 }
 
-model StudentTask {
+model TaskResponse {
   studentId Int
   student   User @relation(fields: [studentId], references: [id])
 
