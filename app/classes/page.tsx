@@ -45,6 +45,7 @@ const ClassesPage = () => {
           <TaskDetail
             task={task}
             responseId={taskResponse ? taskResponse.student.id : 0}
+            isAdmin={isAdmin}
           />
         </div>
       </div>

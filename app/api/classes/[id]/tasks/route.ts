@@ -18,11 +18,17 @@ export async function GET(
 
   const filter: Partial<Task> = { logoClassId: parseInt(params.id) };
 
-  const messages = await prisma.task.findMany({
+  const tasks = await prisma.task.findMany({
     where: filter,
+    select: {
+      question: true,
+      StudentTask: { where: { studentId: parseInt(token["sub"]) } },
+      createdAt: true,
+      id: true,
+    },
   });
 
-  return NextResponse.json(messages, { status: 200 });
+  return NextResponse.json(tasks, { status: 200 });
 }
 
 export async function POST(

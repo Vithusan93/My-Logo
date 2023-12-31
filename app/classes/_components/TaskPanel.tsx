@@ -1,9 +1,14 @@
 import { PublicLogoClass } from "@/components/class/ClassCard";
-import { Task } from "@prisma/client";
-import { Box, Button, Card, Flex, Text } from "@radix-ui/themes";
+import { Task, TaskResponse } from "@prisma/client";
+import { Badge, Box, Button, Card, Flex, Text } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import TaskForm from "./TaskForm";
+
+interface TaskWithResponse extends Task {
+  StudentTask: TaskResponse[];
+}
+
 const TaskPanel = ({
   logoClass,
   onTaskSelect,
@@ -13,8 +18,8 @@ const TaskPanel = ({
   onTaskSelect: (task: Task) => void;
   isAdmin: boolean;
 }) => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [selectedTask, setSelectedTask] = useState<Task>();
+  const [tasks, setTasks] = useState<TaskWithResponse[]>([]);
+  const [selectedTask, setSelectedTask] = useState<TaskWithResponse>();
   const [creatingTask, setCreatingTask] = useState(false);
 
   //TODO: Fetch all the tasks
@@ -25,6 +30,8 @@ const TaskPanel = ({
         const response = await fetch(`/api/classes/${logoClass.id}/tasks`);
         if (response.status === 200) {
           const data = await response.json();
+          console.log(data);
+
           setTasks(data);
         }
       }
@@ -71,6 +78,30 @@ const TaskPanel = ({
                   <Text as="div" size="1" color="gray">
                     {task.createdAt.toLocaleString()}
                   </Text>
+                  {task.StudentTask && task.StudentTask.length > 0 ? (
+                    <>
+                      <Flex gap="3" align="center">
+                        <Text as="div" size="1" color="gray">
+                          {task.StudentTask[0].isSubmitted ? (
+                            <Badge color="green">Submitted</Badge>
+                          ) : (
+                            <Badge>In Progress</Badge>
+                          )}
+                        </Text>
+                        <Text as="div" size="1" color="gray">
+                          {task.StudentTask[0].points ? (
+                            <Badge color="blue">
+                              POINTS: {task.StudentTask[0].points}
+                            </Badge>
+                          ) : (
+                            <Badge>Not Graded</Badge>
+                          )}
+                        </Text>
+                      </Flex>
+                    </>
+                  ) : (
+                    "Not Answered"
+                  )}
                 </Box>
               </Flex>
             </Card>

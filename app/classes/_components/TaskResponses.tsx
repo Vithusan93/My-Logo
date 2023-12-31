@@ -1,6 +1,6 @@
 import { Task, TaskResponse, User } from "@prisma/client";
 import React, { useEffect, useState } from "react";
-import { Box, Button, Card, Flex, Text } from "@radix-ui/themes";
+import { Badge, Box, Button, Card, Flex, Text } from "@radix-ui/themes";
 
 export interface TaskResponseDetail extends TaskResponse {
   student: { id: number; name: string };
@@ -56,9 +56,24 @@ const TaskResponses = ({
                   <Text as="div" size="2" weight="bold">
                     {taskResponse.student.name}
                   </Text>
-                  <Text as="div" size="1" color="gray">
-                    Submitted: {taskResponse.isSubmitted}
-                  </Text>
+                  <Flex gap="3" align="center">
+                    <Text as="div" size="1" color="gray">
+                      {taskResponse.isSubmitted ? (
+                        <Badge color="green">Submitted</Badge>
+                      ) : (
+                        <Badge>In Progress</Badge>
+                      )}
+                    </Text>
+                    <Text as="div" size="1" color="gray">
+                      {taskResponse.points ? (
+                        <Badge color="blue">
+                          POINTS: {taskResponse.points}
+                        </Badge>
+                      ) : (
+                        <Badge>Not Graded</Badge>
+                      )}
+                    </Text>
+                  </Flex>
                 </Box>
               </Flex>
             </Card>

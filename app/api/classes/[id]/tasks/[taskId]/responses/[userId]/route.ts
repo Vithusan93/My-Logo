@@ -32,3 +32,28 @@ export async function GET(
 
   return NextResponse.json(taskResponse, { status: 200 });
 }
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { taskId: string; userId: string } }
+) {
+  const token = await getToken({ req: request });
+  if (!token || !token["sub"]) {
+    return NextResponse.json({}, { status: 401 });
+  }
+
+  const body = await request.json();
+
+  const updatedResponse = await prisma.taskResponse.update({
+    where: {
+      studentId_taskId: {
+        taskId: parseInt(params.taskId),
+        studentId: parseInt(params.userId),
+      },
+    },
+    data: {
+      points: body.points,
+    },
+  });
+  return NextResponse.json(updatedResponse, { status: 200 });
+}

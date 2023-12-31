@@ -16,6 +16,8 @@ export async function GET(
     where: { taskId: parseInt(params.taskId) },
     select: {
       student: { select: { id: true, name: true } },
+      isSubmitted: true,
+      points: true,
     },
   });
 

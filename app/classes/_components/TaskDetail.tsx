@@ -1,20 +1,23 @@
 "use client";
 import LogoDisplay from "@/components/logo/LogoDisplay";
 import { Task, TaskResponse } from "@prisma/client";
-import { Button } from "@radix-ui/themes";
-import React, { useEffect, useState } from "react";
+import { Button, Text, TextField } from "@radix-ui/themes";
+import { useEffect, useState } from "react";
 
 const TaskDetail = ({
   task,
   responseId,
+  isAdmin,
 }: {
   task?: Task;
   responseId: number;
+  isAdmin: boolean;
 }) => {
   const [textAreaContent, setTextAreaContent] = useState("");
   const [command, setCommand] = useState("");
 
   const [taskResponse, setTaskResponse] = useState<TaskResponse | null>();
+  const [points, setPoints] = useState("");
 
   useEffect(() => {
     const getResponse = async () => {
@@ -76,6 +79,28 @@ const TaskDetail = ({
     }
   };
 
+  const savePoints = async () => {
+    if (task && taskResponse) {
+      if (points === "") {
+        return;
+      }
+      const response = await fetch(
+        `/api/classes/0/tasks/${task.id}/responses/${responseId}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            points: parseInt(points),
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const responseData = await response.json();
+        setTaskResponse(responseData);
+      }
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="bg-neutral-200 text-center p-1 border-r-2 border-gray-400">
@@ -87,7 +112,7 @@ const TaskDetail = ({
       <div className="min-h-1/2">
         <LogoDisplay width={800} height={600} commandInput={command} />
       </div>
-      <div className="p-2">
+      <div className="p-1 bg-neutral-200 my-1">
         <div>Response</div>
         <div>
           <textarea
@@ -107,17 +132,39 @@ const TaskDetail = ({
           >
             Execute
           </Button>
-          <Button
-            variant="surface"
-            onClick={() => {
-              saveResponse();
-            }}
-          >
-            Save
-          </Button>
-          <Button onClick={() => submitResponse()}>Submit</Button>
+          {!isAdmin && (
+            <>
+              <Button
+                variant="surface"
+                onClick={() => {
+                  saveResponse();
+                }}
+              >
+                Save
+              </Button>
+              <Button onClick={() => submitResponse()}>Submit</Button>
+            </>
+          )}
         </div>
       </div>
+      {isAdmin && (
+        <div className="p-1 bg-neutral-200 my-1">
+          <div>Grading</div>
+
+          <label className="flex items-center gap-2">
+            <Text as="div" size="2" mb="1" weight="bold">
+              Points
+            </Text>
+            <TextField.Input
+              type="number"
+              value={points}
+              onChange={({ target }) => setPoints(target.value)}
+              defaultValue={taskResponse?.points?.toString()}
+            />
+            <Button onClick={() => savePoints()}>Save</Button>
+          </label>
+        </div>
+      )}
     </div>
   );
 };
