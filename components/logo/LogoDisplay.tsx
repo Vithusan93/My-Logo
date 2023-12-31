@@ -273,13 +273,13 @@ const LogoDisplay = ({
           ref={canvasRef}
           width={width}
           height={height}
-          className="bg-red-100 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2 h-full "
+          className="absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2 h-full "
         />
         <canvas
           ref={canvasTurtleRef}
           width={width}
           height={height}
-          className="bg-green-200 opacity-50 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2 h-full "
+          className="absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2 h-full "
         />
       </div>
 

@@ -17,6 +17,7 @@ const MyScripts = ({ onSelect }: { onSelect: (script: Script) => void }) => {
     <div>
       {scripts.map((script) => (
         <div
+          key={script.id}
           onClick={() => onSelect(script)}
           className="text-xs bg-gray-200 p-1 my-1 rounded-md cursor-pointer"
         >

@@ -102,7 +102,7 @@ const ClassChat = () => {
       getMessages();
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [logoClass]);
 
   if (!session) {
     return <div>You are not logged in</div>;

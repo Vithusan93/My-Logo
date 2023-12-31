@@ -20,7 +20,7 @@ const JoinClass = () => {
       setOpenJoin(true);
     }
     console.log(searchParams);
-  }, []);
+  }, [searchParams]);
 
   const { register, handleSubmit } = useForm<joinClassType>({
     resolver: zodResolver(joinSchema),

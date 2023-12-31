@@ -62,21 +62,23 @@ const ScriptEditor = ({
         </Tabs.List>
 
         <Box px="4" pt="3" pb="2">
-          <Tabs.Content value="import"></Tabs.Content>
+          <Tabs.Content value="import">
+            <div className="flex justify-between py-1 align-middle items-center gap-1">
+              <input
+                type="file"
+                onChange={handleLoadFile}
+                className="text-center align-middle h-full text-sm"
+              />
+              <Button onClick={handleSaveToFile}>Download</Button>
+            </div>
+          </Tabs.Content>
           <Tabs.Content value="classes"></Tabs.Content>
           <Tabs.Content value="myscript">
             <MyScripts onSelect={(script) => setTextAreaContent(script.text)} />
           </Tabs.Content>
         </Box>
       </Tabs.Root>
-      <div className="flex justify-between py-1 align-middle items-center gap-1">
-        <input
-          type="file"
-          onChange={handleLoadFile}
-          className="text-center align-middle h-full"
-        />
-        <Button onClick={handleSaveToFile}>Download</Button>
-      </div>
+
       <div className="flex  flex-col flex-1 p-2">
         <div className="text-sm font-semibold font-mono">Script Editor</div>
         <textarea
