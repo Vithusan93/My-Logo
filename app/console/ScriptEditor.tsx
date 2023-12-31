@@ -1,8 +1,9 @@
 "use client";
 
-import { Button } from "@radix-ui/themes";
+import { Box, Button, Tabs } from "@radix-ui/themes";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import { Tabs, Box, Text } from "@radix-ui/themes";
+import MyScripts from "./_components/MyScripts";
 
 const ScriptEditor = ({
   onExecute,
@@ -10,6 +11,7 @@ const ScriptEditor = ({
   onExecute: (inputCommand: string) => void;
 }) => {
   const [textAreaContent, setTextAreaContent] = useState("");
+  const { data: session } = useSession();
 
   const handleSaveToFile = () => {
     const blob = new Blob([textAreaContent], { type: "text/plain" });
@@ -38,6 +40,15 @@ const ScriptEditor = ({
     }
   };
 
+  const saveScript = async () => {
+    if (textAreaContent !== "") {
+      const response = await fetch("/api/scripts", {
+        method: "POST",
+        body: JSON.stringify({ text: textAreaContent }),
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col bg-neutral-50 rounded-lg overflow-hidden shadow-md h-full">
       <div className="bg-neutral-200 text-center p-2">
@@ -47,11 +58,15 @@ const ScriptEditor = ({
         <Tabs.List>
           <Tabs.Trigger value="import">Import Script</Tabs.Trigger>
           <Tabs.Trigger value="classes">Search Script</Tabs.Trigger>
+          <Tabs.Trigger value="myscript">My Script</Tabs.Trigger>
         </Tabs.List>
 
         <Box px="4" pt="3" pb="2">
           <Tabs.Content value="import"></Tabs.Content>
           <Tabs.Content value="classes"></Tabs.Content>
+          <Tabs.Content value="myscript">
+            <MyScripts onSelect={(script) => setTextAreaContent(script.text)} />
+          </Tabs.Content>
         </Box>
       </Tabs.Root>
       <div className="flex justify-between py-1 align-middle items-center gap-1">
@@ -69,8 +84,13 @@ const ScriptEditor = ({
           value={textAreaContent}
           onChange={(e) => setTextAreaContent(e.target.value)}
         />
-        <div className="py-2">
+        <div className="flex gap-2 py-2">
           <Button onClick={() => onExecute(textAreaContent)}>Execute</Button>
+          {session && (
+            <>
+              <Button onClick={() => saveScript()}>Save (online)</Button>
+            </>
+          )}
         </div>
       </div>
     </div>
